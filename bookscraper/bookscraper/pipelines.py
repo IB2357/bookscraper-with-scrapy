@@ -6,7 +6,7 @@
 
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
-
+import pymysql
 
 class BookscraperPipeline:
     def process_item(self, item, spider):
@@ -69,3 +69,81 @@ class BookscraperPipeline:
                     adapter['stars'] = 5
 
         return item
+
+
+class SaveToMySQLPipeline:
+
+    def __init__(self) -> None:
+        # connection
+        self.conn = pymysql.connect(
+            host='172.17.0.2',
+            user='root',
+            password='1234', # NO NEED TO HIDE IT FROM YOU, I TRUST YOU :)
+            database='books'
+        )
+
+        # cursor
+        self.cur = self.conn.cursor()
+
+        # create table if not exists
+        self.cur.execute("""
+        CREATE TABLE IF NOT EXISTS books(
+            id int NOT NULL auto_increment,
+            url VARCHAR(255),
+            title text,
+            product_type VARCHAR(255),
+            price_excl_tax DECIMAL,
+            price_incl_tax DECIMAL,
+            price DECIMAL,
+            tax DECIMAL,
+            availability INTEGER,
+            num_reviews INTEGER,
+            stars INTEGER,
+            category VARCHAR(255),
+            description text,
+            PRIMARY KEY (id)
+        )
+        """)
+
+    def process_item(self, item, spider):
+        self.cur.execute("""
+        INSERT INTO books(
+            url,
+            title, 
+            product_type, 
+            price_excl_tax, 
+            price_incl_tax, 
+            price, 
+            tax, 
+            availability, 
+            num_reviews, 
+            stars, 
+            category, 
+            description
+        )
+        VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+        """,
+        (
+        item['url'],
+        item['title'],
+        item['product_type'],
+        item['price_excl_tax'],
+        item['price_incl_tax'],
+        item['price'],
+        item['tax'],
+        item['availability'],
+        item['num_reviews'],
+        item['stars'],
+        item['category'],
+        item['description'],
+        ))
+
+        self.conn.commit()
+        return item
+    
+    def close_spider(self, spider):
+
+        # close mariadb connections
+        self.cur.close()
+        self.conn.close()
+        
