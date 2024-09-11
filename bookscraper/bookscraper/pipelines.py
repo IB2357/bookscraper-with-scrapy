@@ -73,12 +73,17 @@ class BookscraperPipeline:
 
 class SaveToMySQLPipeline:
 
-    def __init__(self) -> None:
+    # this did work, i dont know whay, to insert settings:object as an argument to __init__()
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(crawler.settings)
+    
+    def __init__(self,settings) -> None:
         # connection
         self.conn = pymysql.connect(
-            host='172.17.0.2',
+            host= settings.get('MARIADB_HOST'),
             user='root',
-            password='1234', # NO NEED TO HIDE IT FROM YOU, I TRUST YOU :)
+            password= settings.get('MARIADB_PASSWORD'), # sorry :(
             database='books'
         )
 
