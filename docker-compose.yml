@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+  bookscraper:
+
+  # # for develoment: uncomment this
+    image: bookscraper:dev
+    build:
+      context: .
+      dockerfile: ./dev/Dockerfile
+
+
+  # for production: uncomment this
+    # image: bookscraper:prod
+    # build:
+    #   context: .
+    #   dockerfile: ./prod/Dockerfile
+    # command: sleep infinity
+  # end 
+
+
+    env_file:
+      - .env
+    ports:
+      - "80:80"      
+      - "443:443"    

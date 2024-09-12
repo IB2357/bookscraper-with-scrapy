@@ -63,13 +63,16 @@ DOWNLOADER_MIDDLEWARES = {
     # 'bookscraper.middlewares.MyProxyMiddleware': 350,  # proxy integration: Rotating/Backconnect Proxy
     # 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 400,  # proxy integration: Rotating/Backconnect Proxy
     # 'scrapeops_scrapy_proxy_sdk.scrapeops_scrapy_proxy_sdk.ScrapeOpsScrapyProxySdk': 725, # proxy integration: proxy api
+    'scrapeops_scrapy.middleware.retry.RetryMiddleware': 550, # for monitoring with ScrapeOps
+    'scrapy.downloadermiddlewares.retry.RetryMiddleware': None, # for monitoring with ScrapeOps
 }
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
-#EXTENSIONS = {
-#    "scrapy.extensions.telnet.TelnetConsole": None,
-#}
+EXTENSIONS = {
+    # "scrapy.extensions.telnet.TelnetConsole": None,
+    'scrapeops_scrapy.extension.ScrapeOpsMonitor': 500, # for monitoring with ScrapeOps
+}
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
