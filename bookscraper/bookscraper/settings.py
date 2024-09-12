@@ -8,6 +8,7 @@
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 from dotenv import load_dotenv
 import os
+
 # Load .env file
 load_dotenv()
 
@@ -56,7 +57,12 @@ ROBOTSTXT_OBEY = True
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
     # "bookscraper.middlewares.ScrapeOpsFakeUserAgentMiddleware": 400,
-    "bookscraper.middlewares.ScrapeOpsFakeBrowserHeaderAgentMiddleware": 400,
+    "bookscraper.middlewares.ScrapeOpsFakeBrowserHeaderAgentMiddleware": 400, 
+    # 'rotating_proxies.middlewares.RotatingProxyMiddleware': 610, # proxy integration: proxy list
+    # 'rotating_proxies.middlewares.BanDetectionMiddleware': 620, # proxy integration: proxy list
+    # 'bookscraper.middlewares.MyProxyMiddleware': 350,  # proxy integration: Rotating/Backconnect Proxy
+    # 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 400,  # proxy integration: Rotating/Backconnect Proxy
+    # 'scrapeops_scrapy_proxy_sdk.scrapeops_scrapy_proxy_sdk.ScrapeOpsScrapyProxySdk': 725, # proxy integration: proxy api
 }
 
 # Enable or disable extensions
@@ -113,3 +119,24 @@ SCRAPEOPS_FAKE_BROWSER_HEADER_ENDPOINT = 'http://headers.scrapeops.io/v1/browser
 SCRAPEOPS_FAKE_USER_AGENT_ENABLED = True
 SCRAPEOPS_FAKE_BROWSER_HEADER_ENABLED = True
 SCRAPEOPS_NUM_RESULTS = 50
+
+
+# proxy integration: proxy list
+ROTATING_PROXY_LIST = [
+    '38.127.179.26:42908',
+    '119.235.19.138:5678',
+    '207.55.243.67:61827',
+    '212.72.149.234:4145'
+]
+
+# proxy integration: Rotating/Backconnect Proxy
+# PROXY_USER = 'username'
+# PROXY_PASSWORD = 'password'
+# PROXY_ENDPOINT = 'gate.smartproxy.com'
+# PROXY_PORT = '7000'
+
+
+# proxy integration: proxy api
+# SCRAPEOPS_API_KEY = 'YOUR_API_KEY'
+# SCRAPEOPS_PROXY_ENABLED = True
+# SCRAPEOPS_PROXY_SETTINGS = {'country': 'us'}
